@@ -4,7 +4,9 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to the RPG Dungeon Adventure!");
+
+            Account account = new Account();
+            account.InitializeProgram();
         }
     }
 }
