@@ -10,7 +10,7 @@ namespace RPGDungeonAdventure
         private string readPIN;
         private string readPINAgain;
         private int balance;
-        User user = new User();
+        
         UserManager userManager = new UserManager();
         private bool loop = true;
         private bool accountCreation = true;
@@ -79,14 +79,18 @@ namespace RPGDungeonAdventure
 
             if (readPIN == readPINAgain)
             {
+                User user = new User();
                 user.Username = readUsername;
                 user.PIN = readPIN;
                 
                 userManager.AddUser(user, numOfUsers);                
 
                 Console.WriteLine("Account has been successfully created!");
+                Console.WriteLine();
+
                 userManager.GetUsers(numOfUsers);
                 Console.WriteLine();
+
                 accountCreation = false;
                 numOfUsers++;
             }
@@ -94,7 +98,6 @@ namespace RPGDungeonAdventure
             {
                 Console.WriteLine("PINs do not match. Try again!");
                 Console.WriteLine();
-                //loop = false;
             }           
         }
 
@@ -105,7 +108,9 @@ namespace RPGDungeonAdventure
 
             Console.Write("Enter PIN: ");
             string read_PIN = Console.ReadLine();
-            Console.WriteLine();            
+            Console.WriteLine();
+
+            User user = new User();
 
             if (read_username == user.Username && read_PIN == user.PIN)
             {
@@ -126,7 +131,9 @@ namespace RPGDungeonAdventure
             Console.WriteLine("         YOUR ACCOUNT           ");
             Console.WriteLine("================================");
             Console.WriteLine();
-           
+
+            User user = new User();
+
             Console.WriteLine("Account Holder: " + user.Username);
             Console.WriteLine();
         }

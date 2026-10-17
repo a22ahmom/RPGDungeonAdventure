@@ -12,7 +12,10 @@ namespace RPGDungeonAdventure
         {
             for (int i = 0; i <= numOfUsers; i++)
             {
-                list[i] = user;
+                if (list[i] == null)
+                {
+                    list[i] = user;
+                }
             }
             return true;
         }
