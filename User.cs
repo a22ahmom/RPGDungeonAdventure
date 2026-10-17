@@ -6,15 +6,8 @@ namespace RPGDungeonAdventure
 {
     internal class User
     {
-        private User[] list = new User[1];
         private string username;
         private string pin;
-
-        public bool AddUser(User user)
-        {
-            list.Append(user);
-            return true;
-        }
 
         public string Username
         {

@@ -10,11 +10,11 @@ namespace RPGDungeonAdventure
         private string readPIN;
         private string readPINAgain;
         private int balance;
-        private string[] allUsernames;
-        private string[] allPINs;
-        //User[] listOfUsers = new User[1];
         User user = new User();
-        bool loop = true;
+        UserManager userManager = new UserManager();
+        private bool loop = true;
+        private bool accountCreation = true;
+        private int numOfUsers = 0;
 
         public void InitializeProgram()
         {
@@ -29,8 +29,7 @@ namespace RPGDungeonAdventure
             while (loop)
             {
                 MenuOptions();
-            }
-            
+            }            
         }
 
         private void MenuOptions()
@@ -47,11 +46,13 @@ namespace RPGDungeonAdventure
             switch (menuOptionSelected)
             {
                 case "1":
-                    //Console.WriteLine("You selected option 1");
-                    CreateAccount();
+                    while (accountCreation)
+                    {
+                        CreateAccount();                        
+                    }
+                    accountCreation = true;
                     break;
                 case "2":
-                    //Console.WriteLine("you selected option 2");
                     LoginIntoAccount();
                     break;
                 case "3":
@@ -76,16 +77,25 @@ namespace RPGDungeonAdventure
             readPINAgain = Console.ReadLine();
             Console.WriteLine();
 
-            
-            user.Username = readUsername;
-            user.PIN = readPIN;
-            user.AddUser(user);
+            if (readPIN == readPINAgain)
+            {
+                user.Username = readUsername;
+                user.PIN = readPIN;
+                
+                userManager.AddUser(user, numOfUsers);                
 
-            Console.WriteLine("Account has been successfully created!");
-            Console.WriteLine();
-
-            //Instantiating array of objects
-            //object[] objArray = new object[5];
+                Console.WriteLine("Account has been successfully created!");
+                userManager.GetUsers(numOfUsers);
+                Console.WriteLine();
+                accountCreation = false;
+                numOfUsers++;
+            }
+            else
+            {
+                Console.WriteLine("PINs do not match. Try again!");
+                Console.WriteLine();
+                //loop = false;
+            }           
         }
 
         private void LoginIntoAccount()
@@ -93,12 +103,9 @@ namespace RPGDungeonAdventure
             Console.Write("Enter username: ");
             string read_username = Console.ReadLine();
 
-
             Console.Write("Enter PIN: ");
             string read_PIN = Console.ReadLine();
-            Console.WriteLine();
-
-            
+            Console.WriteLine();            
 
             if (read_username == user.Username && read_PIN == user.PIN)
             {
@@ -110,9 +117,7 @@ namespace RPGDungeonAdventure
             {
                 Console.WriteLine("Account does not exist");
                 Console.WriteLine();
-            }         
-
-            
+            }                     
         }
 
         private void AccountObjectives()
@@ -121,13 +126,9 @@ namespace RPGDungeonAdventure
             Console.WriteLine("         YOUR ACCOUNT           ");
             Console.WriteLine("================================");
             Console.WriteLine();
-
-            
-
+           
             Console.WriteLine("Account Holder: " + user.Username);
             Console.WriteLine();
-
         }
-
     }
 }

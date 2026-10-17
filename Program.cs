@@ -4,7 +4,6 @@
     {
         static void Main(string[] args)
         {
-
             Account account = new Account();
             account.InitializeProgram();
         }
