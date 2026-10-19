@@ -20,12 +20,25 @@ namespace RPGDungeonAdventure
             return true;
         }
 
-        public void GetUsers(int numOfUsers)
+        public User[] GetUsers()
+        {            
+            //for (int i = 0; i <= numOfUsers; i++)
+            //{
+            //    Console.WriteLine(list[i].Username);
+            //}
+            return list;
+        }
+
+        public User GetUser(User user, int numOfUsers)
         {
-            for (int i = 0; i <= numOfUsers; i++)
+            for (int i = 0; i < numOfUsers; i++)
             {
-                Console.WriteLine(list[i].Username);
+                if (list[i].Username == user.Username)
+                {
+                    return user;
+                }
             }
+            return user;
         }
     }
 }
