@@ -8,6 +8,7 @@ namespace RPGDungeonAdventure
     {
         private string username;
         private string pin;
+        private int balance = 0;
 
         public string Username
         {
@@ -30,6 +31,18 @@ namespace RPGDungeonAdventure
             set
             {
                 pin = value;
+            }
+        }
+
+        public int Balance
+        {
+            get
+            {
+                return balance;
+            }
+            set
+            {
+                balance = value;
             }
         }
     }

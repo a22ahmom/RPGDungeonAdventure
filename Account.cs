@@ -10,7 +10,6 @@ namespace RPGDungeonAdventure
         private string readPIN;
         private string readPINAgain;
         private int balance = 0;
-        
         UserManager userManager = new UserManager();
         private bool loop = true;
         private bool accountCreation = true;
@@ -55,6 +54,7 @@ namespace RPGDungeonAdventure
                     break;
                 case "2":
                     LoginIntoAccount();
+                    AccountObjectives();
                     break;
                 case "3":
                     Console.WriteLine("You've successfully exited the program. See you again soon!");
@@ -118,6 +118,8 @@ namespace RPGDungeonAdventure
                 //Console.WriteLine(numOfUsers);
                 if (read_username == list[i].Username && read_PIN == list[i].PIN)
                 {
+                    readUsername = read_username;
+
                     Console.WriteLine("Login successful!");
                     Console.WriteLine();
 
@@ -130,12 +132,10 @@ namespace RPGDungeonAdventure
                     Console.WriteLine("Account Holder: " + list[i].Username);
                     Console.WriteLine();
 
-                    while (isLoggedIn)
-                    {
-                        AccountObjectives();
-                    }
+                    return;
                 }
-                else
+
+                if (read_username != list[i].Username && read_PIN != list[i].PIN)
                 {
                     Console.WriteLine("Account does not exist");
                     Console.WriteLine();
@@ -145,47 +145,59 @@ namespace RPGDungeonAdventure
 
         private void AccountObjectives()
         {
-            Console.WriteLine("1. Check Balance");
-            Console.WriteLine("2. Deposit Money");
-            Console.WriteLine("3. Withdraw Money");
-            Console.WriteLine("4. Transfer Money");
-            Console.WriteLine("5. Transaction History");
-            Console.WriteLine("6. Logout");
-            Console.WriteLine();
-
-            Console.Write("Choose an option: ");
-            string optionSelected = Console.ReadLine();
-            Console.WriteLine();
-
-            switch (optionSelected)
+            while (isLoggedIn)
             {
-                case "1":
-                    CheckBalance();
-                    break;
-                case "2":
-                    DepositMoney();
-                    break;
-                case "3":
-                    WithdrawMoney();
-                    break;
-                case "4":
-                    break;
-                case "5":
-                    break;
-                case "6":
-                    Console.WriteLine("You're logged out!");
-                    Console.WriteLine();
-                    isLoggedIn = false;
-                    break;
-                default:
-                    break;
+                Console.WriteLine("1. Check Balance");
+                Console.WriteLine("2. Deposit Money");
+                Console.WriteLine("3. Withdraw Money");
+                Console.WriteLine("4. Transfer Money");
+                Console.WriteLine("5. Transaction History");
+                Console.WriteLine("6. Logout");
+                Console.WriteLine();
+
+                Console.Write("Choose an option: ");
+                string optionSelected = Console.ReadLine();
+                Console.WriteLine();
+
+                switch (optionSelected)
+                {
+                    case "1":
+                        CheckBalance();
+                        break;
+                    case "2":
+                        DepositMoney();
+                        break;
+                    case "3":
+                        WithdrawMoney();
+                        break;
+                    case "4":
+                        TransferMoney();
+                        break;
+                    case "5":
+                        break;
+                    case "6":
+                        Console.WriteLine("You're logged out!");
+                        Console.WriteLine();
+                        isLoggedIn = false;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
         private void CheckBalance()
         {
-            Console.WriteLine("Available Balance: " + balance);
-            Console.WriteLine();
+            User[] list = userManager.GetUsers();
+
+            for (int i = 0; i < numOfUsers; i++)
+            {
+                if (readUsername == list[i].Username)
+                {
+                    Console.WriteLine("Available Balance: " + list[i].Balance);
+                    Console.WriteLine();
+                }
+            }
         }
 
         private void DepositMoney()
@@ -195,12 +207,18 @@ namespace RPGDungeonAdventure
             Console.WriteLine();
 
             int newBalance = int.Parse(readAmount);
-            balance += newBalance;
+
+            User[] list = userManager.GetUsers();
+
+            for (int i = 0; i < numOfUsers; i++)
+            {
+                if (readUsername == list[i].Username)
+                {
+                    list[i].Balance += newBalance;
+                }
+            }
 
             Console.WriteLine("Deposit successfull :)");
-            Console.WriteLine();
-
-            Console.WriteLine("New Balance: " + balance);
             Console.WriteLine();
         }
 
@@ -211,12 +229,57 @@ namespace RPGDungeonAdventure
             Console.WriteLine();
 
             int newBalance = int.Parse(readAmount);
-            balance -= newBalance;
+
+            User[] list = userManager.GetUsers();
+
+            for (int i = 0; i < numOfUsers; i++)
+            {
+                if (readUsername == list[i].Username)
+                {
+                    list[i].Balance -= newBalance;
+                }
+            }
 
             Console.WriteLine("Withdraw successfull :)");
             Console.WriteLine();
+        }
 
-            Console.WriteLine("New Balance: " + balance);
+        private void TransferMoney()
+        {
+            Console.Write("From account: ");
+            string readAccount = Console.ReadLine();
+            Console.WriteLine();
+
+            Console.Write("To recipient: ");
+            string readRecipient = Console.ReadLine();
+            Console.WriteLine();
+
+            Console.Write("Amount: ");
+            string readAmount = Console.ReadLine();
+            Console.WriteLine();
+
+            int amount = int.Parse(readAmount);
+            //balance -= amount;
+
+            User[] list = userManager.GetUsers();
+
+            for (int i = 0; i < numOfUsers; i++)
+            {
+                bool checkAccount = readAccount == list[i].Username;
+                bool checkRecipient = readRecipient == list[i].Username;
+
+                if (checkAccount)
+                {
+                    list[i].Balance -= amount;
+                }
+
+                if (checkRecipient)
+                {
+                    list[i].Balance += amount;
+                }                
+            }
+
+            Console.WriteLine("Transfer successfull :)");
             Console.WriteLine();
         }
     }

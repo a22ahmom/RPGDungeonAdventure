@@ -21,11 +21,7 @@ namespace RPGDungeonAdventure
         }
 
         public User[] GetUsers()
-        {            
-            //for (int i = 0; i <= numOfUsers; i++)
-            //{
-            //    Console.WriteLine(list[i].Username);
-            //}
+        {
             return list;
         }
 
