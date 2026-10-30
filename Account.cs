@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ConsoleTables;
 
 namespace RPGDungeonAdventure
 {
@@ -9,7 +10,6 @@ namespace RPGDungeonAdventure
         private string readUsername;
         private string readPIN;
         private string readPINAgain;
-        private int balance = 0;
         UserManager userManager = new UserManager();
         private bool loop = true;
         private bool accountCreation = true;
@@ -54,7 +54,7 @@ namespace RPGDungeonAdventure
                     break;
                 case "2":
                     LoginIntoAccount();
-                    AccountObjectives();
+                    isLoggedIn = true;
                     break;
                 case "3":
                     Console.WriteLine("You've successfully exited the program. See you again soon!");
@@ -78,19 +78,16 @@ namespace RPGDungeonAdventure
             readPINAgain = Console.ReadLine();
             Console.WriteLine();
 
+            int initialMoneyAmount = 0;
+
             if (readPIN == readPINAgain)
             {
-                User user = new User();
-                user.Username = readUsername;
-                user.PIN = readPIN;
+                User user = new User(readUsername, readPIN, initialMoneyAmount);
                 
-                userManager.AddUser(user, numOfUsers);                
+                userManager.AddUser(user, numOfUsers);       
 
                 Console.WriteLine("Account has been successfully created!");
                 Console.WriteLine();
-
-                //userManager.GetUsers(numOfUsers);
-                //Console.WriteLine();
 
                 accountCreation = false;
                 numOfUsers++;
@@ -113,9 +110,8 @@ namespace RPGDungeonAdventure
 
             User[] list = userManager.GetUsers();
 
-            for (int i = 0; i < numOfUsers; i++)
+            for (int i = 0; i <= numOfUsers; i++)
             {
-                //Console.WriteLine(numOfUsers);
                 if (read_username == list[i].Username && read_PIN == list[i].PIN)
                 {
                     readUsername = read_username;
@@ -128,9 +124,10 @@ namespace RPGDungeonAdventure
                     Console.WriteLine("================================");
                     Console.WriteLine();
 
-
                     Console.WriteLine("Account Holder: " + list[i].Username);
                     Console.WriteLine();
+
+                    AccountObjectives();
 
                     return;
                 }
@@ -140,7 +137,7 @@ namespace RPGDungeonAdventure
                     Console.WriteLine("Account does not exist");
                     Console.WriteLine();
                 }
-            }                                
+            }                              
         }
 
         private void AccountObjectives()
@@ -174,6 +171,7 @@ namespace RPGDungeonAdventure
                         TransferMoney();
                         break;
                     case "5":
+                        TransactionHistory();
                         break;
                     case "6":
                         Console.WriteLine("You're logged out!");
@@ -259,18 +257,48 @@ namespace RPGDungeonAdventure
             Console.WriteLine();
 
             int amount = int.Parse(readAmount);
-            //balance -= amount;
+
+            TransferMoney tf = new TransferMoney(readAccount, readRecipient, amount);
 
             User[] list = userManager.GetUsers();
 
             for (int i = 0; i < numOfUsers; i++)
             {
+                if (readUsername == list[i].Username)
+                {
+                    list[i].TransferMny = tf;
+
+                    Console.WriteLine(list[i].Username);
+                    Console.WriteLine(list[i].PIN);
+                    Console.WriteLine(list[i].Balance);
+
+                    Console.WriteLine(list[i].TransferMny.AccountSender);
+                    Console.WriteLine(list[i].TransferMny.AccountReceiver);
+                    Console.WriteLine(list[i].TransferMny.AmountTransferred);
+                }
+
+                if (readRecipient == list[i].Username)
+                {
+                    list[i].TransferMny = tf;
+                }
+
                 bool checkAccount = readAccount == list[i].Username;
                 bool checkRecipient = readRecipient == list[i].Username;
 
                 if (checkAccount)
                 {
-                    list[i].Balance -= amount;
+                    if (list[i].Balance != 0)
+                    {
+                        list[i].Balance -= amount;
+
+                        Console.WriteLine("Transfer successfull :)");
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Unable to transfer money due to insufficient amount");
+                        Console.WriteLine();
+                    }
                 }
 
                 if (checkRecipient)
@@ -278,9 +306,26 @@ namespace RPGDungeonAdventure
                     list[i].Balance += amount;
                 }                
             }
+        }
 
-            Console.WriteLine("Transfer successfull :)");
-            Console.WriteLine();
+        private void TransactionHistory()
+        {
+            User[] list = userManager.GetUsers();
+
+            for (int i = 0; i < numOfUsers; i++)
+            {
+                if (readUsername == list[i].Username)
+                {
+                    var table = new ConsoleTable("Sender", "Receiver", "Amount");
+                    
+                    table.AddRow(
+                        list[i].TransferMny.AccountSender,
+                        list[i].TransferMny.AccountReceiver,
+                        list[i].TransferMny.AmountTransferred);
+
+                    table.Write(Format.Alternative);                    
+                }
+            }
         }
     }
 }

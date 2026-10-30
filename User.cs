@@ -9,6 +9,14 @@ namespace RPGDungeonAdventure
         private string username;
         private string pin;
         private int balance = 0;
+        TransferMoney transferMny;
+
+        public User(string username, string pin, int balance, TransferMoney transferMoney = null)
+        {
+            this.username = username;
+            this.pin = pin;
+            this.balance = balance;
+        }
 
         public string Username
         {
@@ -43,6 +51,18 @@ namespace RPGDungeonAdventure
             set
             {
                 balance = value;
+            }
+        }
+
+        public TransferMoney TransferMny
+        {
+            get
+            {
+                return transferMny;
+            }
+            set
+            {
+                transferMny = value;
             }
         }
     }
