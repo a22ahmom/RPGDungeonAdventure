@@ -78,7 +78,7 @@ namespace RPGDungeonAdventure
             readPINAgain = Console.ReadLine();
             Console.WriteLine();
 
-            int initialMoneyAmount = 0;
+            int initialMoneyAmount = 0;            
 
             if (readPIN == readPINAgain)
             {
@@ -206,6 +206,8 @@ namespace RPGDungeonAdventure
 
             int newBalance = int.Parse(readAmount);
 
+            Deposit deposit = new Deposit(readUsername, newBalance);
+
             User[] list = userManager.GetUsers();
 
             for (int i = 0; i < numOfUsers; i++)
@@ -213,6 +215,7 @@ namespace RPGDungeonAdventure
                 if (readUsername == list[i].Username)
                 {
                     list[i].Balance += newBalance;
+                    list[i].Deposit = deposit;
                 }
             }
 
@@ -228,6 +231,8 @@ namespace RPGDungeonAdventure
 
             int newBalance = int.Parse(readAmount);
 
+            Withdrawal withdrawal = new Withdrawal(readUsername, newBalance);
+
             User[] list = userManager.GetUsers();
 
             for (int i = 0; i < numOfUsers; i++)
@@ -235,6 +240,7 @@ namespace RPGDungeonAdventure
                 if (readUsername == list[i].Username)
                 {
                     list[i].Balance -= newBalance;
+                    list[i].Withdrawal = withdrawal;
                 }
             }
 
@@ -316,14 +322,18 @@ namespace RPGDungeonAdventure
             {
                 if (readUsername == list[i].Username)
                 {
-                    var table = new ConsoleTable("Sender", "Receiver", "Amount");
-                    
+                    var table = new ConsoleTable("Sender", "Receiver", "Amount Transferred", "Source Account", "Amount deposited", "Source Account", "Amount Withdrawn");
+
                     table.AddRow(
                         list[i].TransferMny.AccountSender,
                         list[i].TransferMny.AccountReceiver,
-                        list[i].TransferMny.AmountTransferred);
+                        list[i].TransferMny.AmountTransferred,
+                        list[i].Deposit.SourceAccount,
+                        list[i].Deposit.DepositAmount,
+                        list[i].Withdrawal.SourceAccount,
+                        list[i].Withdrawal.WithdrawalAmount);
 
-                    table.Write(Format.Alternative);                    
+                    table.Write(Format.MarkDown);                    
                 }
             }
         }

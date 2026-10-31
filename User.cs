@@ -9,9 +9,11 @@ namespace RPGDungeonAdventure
         private string username;
         private string pin;
         private int balance = 0;
-        TransferMoney transferMny;
+        TransferMoney transferMny = new TransferMoney(null, null, 0);
+        Deposit deposit = new Deposit(null, 0);
+        Withdrawal withdrawal = new Withdrawal(null, 0);
 
-        public User(string username, string pin, int balance, TransferMoney transferMoney = null)
+        public User(string username, string pin, int balance, TransferMoney transferMoney = null, Deposit deposit = null, Withdrawal withdrawal = null)
         {
             this.username = username;
             this.pin = pin;
@@ -63,6 +65,30 @@ namespace RPGDungeonAdventure
             set
             {
                 transferMny = value;
+            }
+        }
+
+        public Deposit Deposit
+        {
+            get
+            {
+                return deposit;
+            }
+            set
+            {
+                deposit = value;
+            }
+        }
+
+        public Withdrawal Withdrawal
+        {
+            get
+            {
+                return withdrawal;
+            }
+            set
+            {
+                withdrawal = value;
             }
         }
     }
